@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+</html>
+
+<head>
+    <!-- The head contains information about the page, it does not appear on screen -->
+    <meta charset="UTF-8">
+    <!-- Defines the character encoding to support special characters -->
+
+    <title>Contact Us – Irish Sponsorship Jobs</title>
+    <!-- Title that appears on the browser tab -->
+
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Links the CSS file to style the page -->
+
+    <script src="js/script.js" defer></script>
+    <!-- Links the JavaScript file. The "defer" makes the script load only after the HTML is ready -->
+</head>
+
+<body>
+    <!-- The body contains everything that appears on screen -->
+
+    <header>
+        <!-- Site header with the name and navigation menu -->
+
+        <h1>Contact Us</h1>
+        <!-- Main title of this page -->
+
+        <nav>
+            <!-- Navigation menu with links to the other pages -->
+            <a href="home.html">Home</a>
+            <a href="jobs.html">Jobs</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact Us</a>
+        </nav>
+    </header>
+
+    <div class="main-content">
+        <!-- Main div that wraps the central content of the page -->
+
+        <h2>Send us your query</h2>
+        <!-- Subtitle of the form -->
+
+        <form id="contactForm" onsubmit="return validateForm()" novalidate>
+            <!-- Contact form. The id identifies this form
+            onsubmit calls validateForm() when the user clicks Submit -->
+            
+            <label>Name:</label>
+            <!-- Label for the name field -->
+            <input type="text" id="name">
+            <!-- Text field for the name. The "id" is used by JavaScript to identify the field -->
+
+            <label>Phone:</label>
+            <!-- Label for the phone field -->
+            <input type="text" id="phone">
+            <!-- Text field for the phone number -->
+
+            <label>Email:</label>
+            <!-- Label for the email field -->
+            <input type="text" id="email">
+            <!-- Text field for the email -->
+
+            <label>Your Message:</label>
+            <!-- Label for the message area -->
+            <textarea id="message"></textarea>
+            <!-- Text area for the message. Larger than a regular input field -->
+
+            <button type="submit">Submit</button>
+            <!-- Button that submits the form and triggers validateForm() -->
+
+            <p id="error" class="error"></p>
+            <!-- Paragraph where JavaScript error messages will appear. Starts empty -->
+
+        </form>
+
+    </div>
+
+    <footer>
+        <!-- Page footer with copyright information -->
+        <p>© 2026 Irish Sponsorship Jobs</p>
+    </footer>
+
+</body>
+</html>
