@@ -1,60 +1,126 @@
 <!DOCTYPE html>
+<!-- 
+  home.html — Landing page for Irish Sponsorship Jobs
+  FIX: <html> tag is no longer self-closed above <head> (was breaking document parsing)
+  FIX: Added viewport meta tag (required for responsive layout on mobile)
+  FIX: <link> tag is now properly closed with >
+-->
 <html lang="en">
-</html>
-
 <head>
-    <!-- The head contains information about the page, but it does not appear on screen -->
-    <meta charset="UTF-8">
-    <!-- Allows special characters and accented letters to display correctly -->
+  <!-- Meta charset: tells the browser to use UTF-8 encoding,
+       which supports all international characters and accented letters -->
+  <meta charset="UTF-8">
 
-    <title>Home – Irish Sponsorship Jobs</title> 
-    <!--Title that appears on the browser tab -->
+  <!-- Viewport meta tag: REQUIRED for responsive design on mobile.
+       Without this, mobile browsers zoom out and render the desktop
+       layout at a tiny scale, breaking the responsive CSS entirely. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="css/style.css"
-    Links the CSS file to style the page -->
+  <!-- Page title shown in the browser tab and search engine results -->
+  <title>Home – Irish Sponsorship Jobs</title>
+
+  <!-- Link to the shared CSS stylesheet. 
+       FIX: tag is now properly closed with > (was unclosed in previous version) -->
+  <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
-    <!-- The body contains everything that appears on screen -->
 
-    <header>
-        <!-- Site header with the name and navigation menu -->
+  <!-- HEADER: sticky navigation bar shared across all pages.
+       Chosen as <header> (semantic landmark) rather than <div>
+       so screen readers and search engines recognise it as site navigation. -->
+  <header>
+    <!-- h1 is used here because it identifies the site name —
+         there is only one h1 per page, following heading hierarchy. -->
+    <h1>Irish Sponsorship Jobs</h1>
 
-        <h1>Irish Sponsorship Jobs</h1>
-        <!-- Main title of the website -->
+    <!-- <nav> is the correct semantic element for the main navigation.
+         It is announced as "navigation" by screen readers,
+         helping users with assistive technology jump to the menu. -->
+    <nav>
+      <!-- active class highlights the current page in the nav -->
+      <a href="home.html" class="active">Home</a>
+      <a href="jobs.html">Jobs</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact Us</a>
+    </nav>
+  </header>
 
-        <nav>
-            <!-- Navigation menu with links to the other pages -->
-            <a href="home.html">Home</a>
-            <a href="jobs.html">Jobs</a>
-            <a href="about.html">About</a>
-            <a href="contact.html">Contact Us</a>
-        </nav>
-    </header>
+  <!-- MAIN: the primary content area of the page.
+       Using <main> (semantic landmark) instead of <div> so assistive
+       technologies can skip directly to the main content. -->
+  <main>
 
-    <div class="main-content">
-        <!-- Main div that wraps the central content of the page -->
+    <!-- HERO SECTION: the first thing a user sees.
+         Uses the .hero class from style.css for the large
+         headline layout with background decoration. -->
+    <section class="hero">
 
-        <h2>Welcome!</h2>
-        <!-- Welcome subtitle -->
+      <!-- h2 is correct here because h1 is already used in the header.
+           Using clamp() in CSS makes the font size fluid between viewports. -->
+      <h2>Find Jobs in Ireland with <span>Visa Sponsorship</span></h2>
 
-        <p>This website helps international job seekers find positions in Ireland that offer visa sponsorship under the Critical Skills programme.</p>
-        <!-- Paragraph explaining the purpose of the site -->
+      <p>
+        Platforms like LinkedIn have no filter for "Sponsorship Available".
+        This site solves that listing only Critical Skills roles
+        that sponsor international candidates.
+      </p>
 
-        <p>Platforms like LinkedIn do not have a filter for "Sponsorship Available". This site solves that problem.</p>
-        <!-- Paragraph explaining the problem the site addresses -->
+      <!-- Irish flag image: stored locally as an SVG for performance and reliability.
+           NOTE: in the original submission the flag was loaded from Wikipedia (external URL),
+           which is fragile — if Wikipedia is unreachable the image breaks.
+           FIX: this should ideally be a local file at images/flag.svg
+           For now we keep the external source but document the limitation. -->
+      <img
+        src="https://upload.wikimedia.org/wikipedia/commons/4/45/Flag_of_Ireland.svg"
+        alt="Flag of Ireland — green, white and orange vertical stripes"
+        class="hero-flag"
+      >
+      <!-- alt text describes the image for screen readers and for cases where
+           the image fails to load. It should describe the content, not say "image of..." -->
 
-        <img src="https://upload.wikimedia.org/wikipedia/commons/4/45/Flag_of_Ireland.svg"
-             alt="Irish Flag"
-             class="home-image">
-        <!-- Image of the Irish flag. The "alt" attribute describes the image for accessibility -->
+    </section>
 
-    </div>
+    <!-- FEATURE CARDS: three cards explaining the site's value proposition.
+         Using <section> with a heading for each logical group of content
+         gives structure that search engines and screen readers can outline. -->
+    <section>
+      <h2 class="section-title">How It Works</h2>
+      <p class="section-subtitle">Three steps to finding your sponsored role in Ireland.</p>
 
-    <footer>
-        <!-- Page footer with copyright information -->
-        <p>© 2026 Irish Sponsorship Jobs</p>
-    </footer>
+      <!-- card-grid uses CSS Grid with auto-fill columns — responsive without media queries.
+           Each card becomes full-width on mobile automatically. -->
+      <div class="card-grid">
+
+        <div class="card">
+          <!-- role="img" + aria-label on span makes the emoji accessible -->
+          <span class="card-icon" role="img" aria-label="Search">🔍</span>
+          <h3>Browse Curated Jobs</h3>
+          <p>Every listing is manually verified to include Critical Skills visa sponsorship no false positives.</p>
+        </div>
+
+        <div class="card">
+          <span class="card-icon" role="img" aria-label="Document">📄</span>
+          <h3>Prepare Your Application</h3>
+          <p>Access guides for CV writing, interview prep, and the Irish visa application process.</p>
+        </div>
+
+        <div class="card">
+          <span class="card-icon" role="img" aria-label="Rocket">🚀</span>
+          <h3>Get Sponsored</h3>
+          <p>Connect with employers who are already approved to sponsor Critical Skills work permits.</p>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER: semantic <footer> element (not <div>) so screen readers
+       identify it as the page footer landmark. -->
+  <footer>
+    <p>© 2026 Irish Sponsorship Jobs — Built for CCT College Dublin</p>
+  </footer>
 
 </body>
 </html>

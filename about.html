@@ -1,58 +1,152 @@
 <!DOCTYPE html>
+<!-- 
+  about.html — About this project
+  FIX: <html> tag is no longer self-closed above <head>
+  FIX: Added viewport meta tag for mobile responsiveness
+-->
 <html lang="en">
-    
-</html>
 <head>
-    <!-- The head contains information about the page, it does not appear on screen -->
-    <meta charset="UTF-8">
-    <!-- Defines the character encoding to support special characters -->
+  <!-- UTF-8 encoding ensures all characters render correctly across browsers -->
+  <meta charset="UTF-8">
 
-    <title>About – Irish Sponsorship Jobs</title>
-    <!-- Title that appears on the browser tab -->
+  <!-- Viewport meta tag: REQUIRED for responsive CSS to work on phones and tablets.
+       width=device-width sets the layout width to the device screen width.
+       initial-scale=1.0 prevents automatic zoom-out on mobile. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="css/style.css">
-    <!-- Links the CSS file to style the page -->
+  <title>About – Irish Sponsorship Jobs</title>
+
+  <!-- Shared stylesheet — all design tokens (colours, fonts, spacing)
+       are defined as CSS variables in style.css, so this page inherits
+       the full design system automatically -->
+  <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
-    <!-- The body contains everything that appears on screen -->
 
-    <header>
-        <!-- Site header with the name and navigation menu -->
+  <!-- HEADER: semantic landmark shared across all pages.
+       Using <header> rather than <div class="header"> communicates
+       its role to search engines and screen readers without extra attributes. -->
+  <header>
+    <h1>Irish Sponsorship Jobs</h1>
 
-        <h1>About This Project</h1>
-        <!-- Main title of this page -->
+    <!-- <nav> is the HTML5 landmark for navigation.
+         Browsers and screen readers use it to provide navigation shortcuts. -->
+    <nav>
+      <a href="home.html">Home</a>
+      <a href="jobs.html">Jobs</a>
+      <!-- active class applied to the current page for wayfinding -->
+      <a href="about.html" class="active">About</a>
+      <a href="contact.html">Contact Us</a>
+    </nav>
+  </header>
 
-        <nav>
-            <!-- Navigation menu with links to the other pages -->
-            <a href="home.html">Home</a>
-            <a href="jobs.html">Jobs</a>
-            <a href="about.html">About</a>
-            <a href="contact.html">Contact Us</a>
-        </nav>
-    </header>
+  <!-- MAIN: primary content area landmark.
+       Assistive technologies use <main> to let users skip repeated
+       header/navigation content and jump straight to page content. -->
+  <main>
 
-    <div class="main-content">
-        <!-- Main div that wraps the central content of the page -->
+    <h2 class="section-title">Why This Website Exists</h2>
+    <p class="section-subtitle">
+      A problem worth solving and the thinking behind our approach.
+    </p>
 
-        <h2>Why This Website Exists</h2>
-        <!-- Subtitle explaining the purpose of the site -->
+    <!-- Two-column grid on desktop, single column on mobile.
+         The CSS handles the responsive behaviour via a media query. -->
+    <div class="about-grid">
 
-        <p>Many job seekers struggle to find positions in Ireland that offer visa sponsorship.</p>
-        <!-- Paragraph describing the problem -->
+      <!-- Left column: narrative text explaining the problem and solution -->
+      <div>
+        <!-- <p> tags for each distinct idea — better readability and structure
+             than one long paragraph, and easier to style independently -->
+        <p style="color: var(--color-muted); margin-bottom: 1rem;">
+          Many international job seekers struggle to find positions in Ireland
+          that offer visa sponsorship. Searching on platforms like LinkedIn or
+          Indeed requires reading each job description individually there is
+          no "Sponsorship Available" filter.
+        </p>
 
-        <p>Platforms like LinkedIn and Indeed do not provide a filter for "Sponsorship Available", making the search slow and frustrating for international candidates.</p>
-        <!-- Paragraph explaining the limitation of existing platforms -->
+        <p style="color: var(--color-muted); margin-bottom: 1rem;">
+          This wastes hours of effort and creates frustration for candidates who
+          are fully qualified but need an employer willing to sponsor their work permit
+          under Ireland's Critical Skills Employment Permit programme.
+        </p>
 
-        <p>This website solves that problem by listing only jobs that include Critical Skills sponsorship, helping international candidates find relevant opportunities faster.</p>
-        <!-- Paragraph explaining the solution the site offers -->
+        <p style="color: var(--color-muted);">
+          Irish Sponsorship Jobs solves this by curating only roles that explicitly
+          include sponsorship saving candidates time and helping qualified
+          internationals find their path to working in Ireland.
+        </p>
+      </div>
+
+      <!-- Right column: stat blocks for visual impact and quick-read value -->
+      <div style="display: flex; flex-direction: column; gap: 1rem;">
+
+        <div class="stat-block">
+          <!-- Large number in display font creates visual anchor -->
+          <div class="stat-number">100%</div>
+          <div class="stat-label">of listed jobs include Critical Skills sponsorship</div>
+        </div>
+
+        <div class="stat-block">
+          <div class="stat-number">4+</div>
+          <div class="stat-label">Irish cities covered including Dublin, Cork and Galway</div>
+        </div>
+
+        <div class="stat-block">
+          <div class="stat-number">Free</div>
+          <div class="stat-label">to browse no account required to view listings</div>
+        </div>
+
+      </div>
 
     </div>
 
-    <footer>
-        <!-- Page footer with copyright information -->
-        <p>© 2026 Irish Sponsorship Jobs</p>
-    </footer>
+    <!-- FEATURE CARDS: explains how the site differs from general job boards.
+         <section> with a heading creates a named content region that
+         assistive technologies can list in the page outline. -->
+    <section>
+      <h2 class="section-title">What Makes Us Different</h2>
+      <p class="section-subtitle">We focus on one thing and do it well.</p>
+
+      <div class="card-grid">
+
+        <div class="card">
+          <span class="card-icon" role="img" aria-label="Verified checkmark">✅</span>
+          <h3>Verified Listings Only</h3>
+          <p>
+            Every job is checked to confirm the employer holds an active licence
+            to issue Critical Skills permits not just "may consider sponsorship".
+          </p>
+        </div>
+
+        <div class="card">
+          <span class="card-icon" role="img" aria-label="Ireland flag">🇮🇪</span>
+          <h3>Ireland-Specific Focus</h3>
+          <p>
+            We focus exclusively on the Irish market and the Critical Skills
+            Employment Permit, so guidance is accurate and up to date.
+          </p>
+        </div>
+
+        <div class="card">
+          <span class="card-icon" role="img" aria-label="Globe">🌍</span>
+          <h3>Built for Internationals</h3>
+          <p>
+            Resources are written with non-EU candidates in mind, explaining
+            visa terminology and process steps that locals take for granted.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER: <footer> landmark identifies end-of-page content for all user agents -->
+  <footer>
+    <p>© 2026 Irish Sponsorship Jobs Built for CCT College Dublin</p>
+  </footer>
 
 </body>
 </html>

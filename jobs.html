@@ -1,69 +1,125 @@
 <!DOCTYPE html>
-<html lang="en">    
-</html>
-
+<!-- 
+  jobs.html — Job listings page
+  FIX: <html> tag is no longer self-closed above <head>
+  FIX: Added viewport meta tag for mobile responsiveness
+  FIX: Removed unclosed <div class="main-content"> / stray </div> that broke layout
+-->
+<html lang="en">
 <head>
-    <!-- The head contains information about the page, it does not appear on screen -->
-    <meta charset="UTF-8">
-    <!-- Defines the character encoding to support special characters -->
+  <!-- UTF-8 encoding to support all international characters -->
+  <meta charset="UTF-8">
 
-    <title>Jobs – Irish Sponsorship Jobs</title>
-    <!-- Title that appears on the browser tab -->
+  <!-- Viewport meta tag: without this, mobile browsers ignore all responsive
+       CSS rules and render the page as a shrunken desktop layout -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="css/style.css">
-    <!-- Links the CSS file to style the page -->
+  <title>Jobs – Irish Sponsorship Jobs</title>
+
+  <!-- Single external stylesheet; all pages share the same CSS file
+       so design changes propagate everywhere automatically -->
+  <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
-    <!-- The body contains everything that appears on screen -->
 
-    <header>
-        <!-- Site header with the name and navigation menu -->
+  <!-- HEADER: identical across all pages for consistent navigation.
+       <header> is a semantic landmark — preferred over a generic <div>
+       because it signals "site header" to browsers and assistive tools. -->
+  <header>
+    <h1>Irish Sponsorship Jobs</h1>
 
-        <h1>Available Sponsorship Jobs</h1>
-        <!-- Main title of this page -->
+    <!-- <nav> wraps all navigation links — semantic element that lets
+         screen readers offer a "skip to navigation" shortcut -->
+    <nav>
+      <a href="home.html">Home</a>
+      <!-- active class on the current page link provides visual feedback
+           so the user always knows which page they are on -->
+      <a href="jobs.html" class="active">Jobs</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact Us</a>
+    </nav>
+  </header>
 
-        <nav>
-            <!-- Navigation menu with links to the other pages -->
-            <a href="home.html">Home</a>
-            <a href="jobs.html">Jobs</a>
-            <a href="about.html">About</a>
-            <a href="contact.html">Contact Us</a>
-        </nav>
-    </header>
+  <!-- MAIN: primary content landmark.
+       Using <main> instead of a plain <div> lets assistive
+       technologies offer a "skip to main content" shortcut. -->
+  <main>
 
-    <!-- <div class="main-content"> -->
-        <!-- Main div that wraps the central content of the page -->
+    <!-- Section heading with the orange underline decoration from CSS -->
+    <h2 class="section-title">Current Opportunities</h2>
+    <p class="section-subtitle">
+      All positions below are part of the Irish Critical Skills Employment Permit
+      programme and include visa sponsorship for eligible international candidates.
+    </p>
 
-        <h2> Current Opportunities</h2>
-        <!-- Subtitle for the job listings -->
+    <!-- <ul> is correct here: an unordered list of job items.
+         list-style is removed in the CSS, but the semantic meaning
+         (a collection of related items) is preserved. -->
+    <ul class="job-list">
 
-        <p> All jobs listed below are part of the Irish Critical Skills programme and offer visa sponsorship.</p>
-        <!-- Paragraph explaining that all listed jobs include sponsorship -->
+      <!-- Each <li> contains job details structured with nested elements
+           for title and metadata, rather than a single unstyled string.
+           This gives CSS more control over layout and makes content
+           more readable for screen readers. -->
+      <li>
+        <div>
+          <div class="job-title">Software Engineer</div>
+          <!-- City and permit type are secondary info — styled with .job-meta -->
+          <div class="job-meta">Dublin · Critical Skills Permit</div>
+        </div>
+        <!-- Badge communicates sponsorship availability at a glance -->
+        <span class="badge">Sponsorship Available</span>
+      </li>
 
-        <ul class="job-list">
-            <!-- Unordered list with the available job positions -->
+      <li>
+        <div>
+          <div class="job-title">Data Analyst</div>
+          <div class="job-meta">Cork · Critical Skills Permit</div>
+        </div>
+        <span class="badge">Sponsorship Available</span>
+      </li>
 
-            <li><strong>Software Engineer</strong> – Dublin · Critical Skills · Sponsorship Available</li>
-            <!-- List item: job title, city, type and sponsorship -->
+      <li>
+        <div>
+          <div class="job-title">Network Engineer</div>
+          <div class="job-meta">Galway · Critical Skills Permit</div>
+        </div>
+        <span class="badge">Sponsorship Available</span>
+      </li>
 
-            <li><strong>Data Analyst</strong> – Cork · Critical Skills · Sponsorship Available</li>
-            <!-- List item: job title, city, type and sponsorship -->
+      <li>
+        <div>
+          <div class="job-title">SAP Functional Consultant</div>
+          <div class="job-meta">Cork · Critical Skills Permit</div>
+        </div>
+        <span class="badge">Sponsorship Available</span>
+      </li>
 
-            <li><strong>Network Engineer</strong> – Galway · Critical Skills · Sponsorship Available</li>
-            <!-- List item: job title, city, type and sponsorship -->
+      <li>
+        <div>
+          <div class="job-title">Cloud Solutions Architect</div>
+          <div class="job-meta">Dublin · Critical Skills Permit</div>
+        </div>
+        <span class="badge">Sponsorship Available</span>
+      </li>
 
-            <li><strong>SAP Functional Consultant</strong> – Cork · Critical Skills · Sponsorship Available</li>
-            <!-- List item: job title, city, type and sponsorship -->
+      <li>
+        <div>
+          <div class="job-title">DevOps Engineer</div>
+          <div class="job-meta">Limerick · Critical Skills Permit</div>
+        </div>
+        <span class="badge">Sponsorship Available</span>
+      </li>
 
-        </ul>
+    </ul>
 
-    </div>
+  </main>
 
-    <footer>
-        <!-- Page footer with copyright information -->
-        <p>© 2026 Irish Sponsorship Jobs</p>
-    </footer>
+  <!-- FOOTER: <footer> semantic landmark for page footer content -->
+  <footer>
+    <p>© 2026 Irish Sponsorship Jobs — Built for CCT College Dublin</p>
+  </footer>
 
 </body>
 </html>

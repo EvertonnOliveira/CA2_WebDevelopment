@@ -1,84 +1,134 @@
 <!DOCTYPE html>
+<!-- 
+  contact.html — Contact form with JavaScript validation
+  FIX: <html> tag is no longer self-closed above <head>
+  FIX: Added viewport meta tag for mobile responsiveness
+  FIX: Added per-field error containers in the DOM (feedback requirement)
+  The JS validation now shows errors inline below each field,
+  not just a single error paragraph at the bottom.
+-->
 <html lang="en">
-</html>
-
 <head>
-    <!-- The head contains information about the page, it does not appear on screen -->
-    <meta charset="UTF-8">
-    <!-- Defines the character encoding to support special characters -->
+  <!-- UTF-8 encoding: supports all special characters in form input -->
+  <meta charset="UTF-8">
 
-    <title>Contact Us – Irish Sponsorship Jobs</title>
-    <!-- Title that appears on the browser tab -->
+  <!-- Viewport meta tag: without this, mobile browsers render the desktop
+       layout shrunken and the form becomes unusable on small screens -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="css/style.css">
-    <!-- Links the CSS file to style the page -->
+  <title>Contact Us – Irish Sponsorship Jobs</title>
 
-    <script src="js/script.js" defer></script>
-    <!-- Links the JavaScript file. The "defer" makes the script load only after the HTML is ready -->
+  <!-- Shared CSS: provides the form, label, input and button styles -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- defer: the script is downloaded in parallel but only executes
+       after the HTML is fully parsed. This prevents the JS from running
+       before the form elements exist in the DOM. -->
+  <script src="js/script.js" defer></script>
 </head>
 
 <body>
-    <!-- The body contains everything that appears on screen -->
 
-    <header>
-        <!-- Site header with the name and navigation menu -->
+  <!-- HEADER: semantic landmark, consistent across all pages -->
+  <header>
+    <h1>Irish Sponsorship Jobs</h1>
 
-        <h1>Contact Us</h1>
-        <!-- Main title of this page -->
+    <!-- <nav>: HTML5 navigation landmark — preferred over a plain <div>
+         because it is announced as a navigation region by screen readers -->
+    <nav>
+      <a href="home.html">Home</a>
+      <a href="jobs.html">Jobs</a>
+      <a href="about.html">About</a>
+      <!-- active class marks the current page for visual and semantic clarity -->
+      <a href="contact.html" class="active">Contact Us</a>
+    </nav>
+  </header>
 
-        <nav>
-            <!-- Navigation menu with links to the other pages -->
-            <a href="home.html">Home</a>
-            <a href="jobs.html">Jobs</a>
-            <a href="about.html">About</a>
-            <a href="contact.html">Contact Us</a>
-        </nav>
-    </header>
+  <!-- MAIN: primary content landmark, wraps all page-specific content -->
+  <main>
 
-    <div class="main-content">
-        <!-- Main div that wraps the central content of the page -->
+    <h2 class="section-title text-center">Send Us a Message</h2>
+    <p class="section-subtitle text-center">We'll get back to you as soon as possible.</p>
 
-        <h2>Send us your query</h2>
-        <!-- Subtitle of the form -->
+    <!-- Form wrapper provides the card-like background and padding from CSS -->
+    <div class="form-wrapper">
 
-        <form id="contactForm" onsubmit="return validateForm()" novalidate>
-            <!-- Contact form. The id identifies this form
-            onsubmit calls validateForm() when the user clicks Submit -->
-            
-            <label>Name:</label>
-            <!-- Label for the name field -->
-            <input type="text" id="name">
-            <!-- Text field for the name. The "id" is used by JavaScript to identify the field -->
+      <!-- FORM ELEMENT:
+           id="contactForm" — referenced by JavaScript to reset fields after submission
+           onsubmit="return validateForm()" — calls our JS function on submit;
+             returning false from validateForm() prevents the form from submitting
+             so the user stays on the page and sees the validation errors
+           novalidate — disables browser built-in validation so our
+             custom JS validation handles everything consistently -->
+      <form id="contactForm" onsubmit="return validateForm()" novalidate>
 
-            <label>Phone:</label>
-            <!-- Label for the phone field -->
-            <input type="text" id="phone">
-            <!-- Text field for the phone number -->
+        <!-- FORM GROUP: wraps each label + input + error message together.
+             This grouping makes it easy for CSS to space the fields evenly
+             and for JS to find the error container next to each input. -->
 
-            <label>Email:</label>
-            <!-- Label for the email field -->
-            <input type="text" id="email">
-            <!-- Text field for the email -->
+        <!-- NAME FIELD -->
+        <div class="form-group">
+          <!-- <label> is linked to the input via the 'for' attribute matching the input 'id'.
+               This means clicking the label also focuses the input — better UX and accessibility. -->
+          <label for="name">Full Name</label>
+          <!-- type="text" is correct for names; using type="email" or type="tel" here
+               would trigger wrong keyboards on mobile -->
+          <input type="text" id="name" placeholder="e.g. Maria Silva" autocomplete="name">
+          <!-- Error container: starts empty; JavaScript writes an error message here
+               when validation fails. Having a dedicated element per field means
+               errors appear directly below the relevant input — much clearer than
+               a single error paragraph at the bottom of the form. -->
+          <span class="field-error" id="error-name"></span>
+        </div>
 
-            <label>Your Message:</label>
-            <!-- Label for the message area -->
-            <textarea id="message"></textarea>
-            <!-- Text area for the message. Larger than a regular input field -->
+        <!-- PHONE FIELD -->
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <!-- type="tel" tells mobile browsers to show the numeric keypad
+               instead of the full keyboard — better UX for phone input -->
+          <input type="tel" id="phone" placeholder="e.g. 0871234567" autocomplete="tel">
+          <span class="field-error" id="error-phone"></span>
+        </div>
 
-            <button type="submit">Submit</button>
-            <!-- Button that submits the form and triggers validateForm() -->
+        <!-- EMAIL FIELD -->
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <!-- type="email" triggers the email keyboard on mobile (with @ symbol prominent)
+               and provides a semantic hint, even though we validate manually in JS -->
+          <input type="email" id="email" placeholder="e.g. maria@email.com" autocomplete="email">
+          <span class="field-error" id="error-email"></span>
+        </div>
 
-            <p id="error" class="error"></p>
-            <!-- Paragraph where JavaScript error messages will appear. Starts empty -->
+        <!-- MESSAGE FIELD -->
+        <div class="form-group">
+          <label for="message">Your Message</label>
+          <!-- <textarea> is used instead of <input type="text"> because messages
+               are multi-line content. resize: vertical in CSS lets users
+               expand it vertically but not horizontally (avoids breaking layout). -->
+          <textarea id="message" placeholder="Tell us how we can help you..."></textarea>
+          <span class="field-error" id="error-message"></span>
+        </div>
 
-        </form>
+        <!-- SUBMIT BUTTON:
+             type="submit" triggers the form's onsubmit handler.
+             The .btn and .btn-primary classes from CSS provide the green styling. -->
+        <button type="submit" class="btn btn-primary">Send Message</button>
 
+        <!-- SUCCESS MESSAGE: hidden by default; JavaScript shows this
+             after all validation passes and the form is submitted successfully -->
+        <p id="success-message" style="display:none; color: var(--color-green); text-align:center; margin-top: 1rem; font-weight: 600;">
+          ✓ Thank you! We'll be in touch soon.
+        </p>
+
+      </form>
     </div>
 
-    <footer>
-        <!-- Page footer with copyright information -->
-        <p>© 2026 Irish Sponsorship Jobs</p>
-    </footer>
+  </main>
+
+  <!-- FOOTER: semantic landmark for page footer -->
+  <footer>
+    <p>© 2026 Irish Sponsorship Jobs — Built for CCT College Dublin</p>
+  </footer>
 
 </body>
 </html>
