@@ -55,12 +55,14 @@ app.use(express.static(path.join(__dirname, 'public')));
    mysql2.createConnection() creates a persistent connection
    to the local MySQL server using credentials from .env
    ============================================================ */
-const db = mysql.createConnection({
-  host:     process.env.DB_HOST,      /* 'localhost' from .env */
-  user:     process.env.DB_USER,      /* 'root' from .env */
-  password: process.env.DB_PASSWORD,  /* your MySQL password from .env */
-  database: process.env.DB_NAME       /* 'irish_sponsorship_db' from .env */
-});
+
+   const db = mysql.createConnection({
+      host:             process.env.DB_HOST,    /* 'localhost' from .env */
+      user:             process.env.DB_USER,   /* 'root' from .env */
+      password:         process.env.DB_PASSWORD, /* your MySQL password from .env */
+      database:         process.env.DB_NAME, /* 'irish_sponsorship_db' from .env */
+      socketPath:       '/tmp/mysql.sock'
+    });
 
 /* .connect() opens the TCP connection to MySQL.
    The callback receives an error if the connection fails
