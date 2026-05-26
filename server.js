@@ -47,7 +47,7 @@ app.use(express.json());
    When the browser requests home.html, style.css, or script.js,
    Express reads and returns the file directly — no route needed.
    This is why we put all HTML/CSS/JS files in the public/ folder. */
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname)));
 
 
 /* ============================================================
@@ -107,7 +107,7 @@ app.use('/api/cart', cartRouter);
    so refreshing on any page doesn't return a 404.
    ============================================================ */
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'home.html'));
+  res.sendFile(path.join(__dirname, 'home.html'));
 });
 
 
