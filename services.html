@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<!--
+  services.html — Subscription plans page
+  Fetches products from GET /api/products and renders them dynamically.
+  The JavaScript on this page makes a real HTTP request to the Node.js
+  server, which queries MySQL and returns the products as JSON.
+  This demonstrates the full stack: HTML → JS fetch → Express → MySQL.
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Services – Irish Sponsorship Jobs</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* ── SERVICES PAGE EXTRA STYLES ───────────────────────────────
+       These styles extend style.css specifically for the pricing
+       cards on this page. Kept here (not in style.css) so the
+       shared stylesheet stays lean and page-specific rules are
+       easy to find. */
+
+    /* Pricing card grid: 3 columns on desktop, 1 on mobile.
+       auto-fit with minmax makes it responsive without a media query. */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    /* Each pricing card */
+    .pricing-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      position: relative;
+      overflow: hidden;
+      transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
+    }
+
+    .pricing-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--color-green);
+      box-shadow: 0 16px 40px rgba(22,155,98,0.15);
+    }
+
+    /* Top gradient accent bar — same motif as .card in style.css */
+    .pricing-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--color-green), var(--color-orange));
+    }
+
+    /* "Best Value" badge on the bundle card */
+    .pricing-card.featured {
+      border-color: var(--color-orange);
+      background: linear-gradient(135deg, var(--color-surface) 0%, rgba(252,163,17,0.05) 100%);
+    }
+
+    .featured-badge {
+      position: absolute;
+      top: 16px; right: 16px;
+      background: var(--color-orange);
+      color: var(--color-bg);
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    /* Category pill above the product name */
+    .category-pill {
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--color-green);
+      background: rgba(22,155,98,0.1);
+      border: 1px solid rgba(22,155,98,0.2);
+      padding: 3px 10px;
+      border-radius: 20px;
+      display: inline-block;
+      width: fit-content;
+    }
+
+    .pricing-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      color: var(--color-white);
+      margin: 0;
+    }
+
+    .pricing-card p {
+      font-size: 0.9rem;
+      color: var(--color-muted);
+      line-height: 1.6;
+      flex: 1; /* pushes price + button to bottom */
+    }
+
+    /* Price display */
+    .price {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+
+    .price-currency {
+      font-size: 1.1rem;
+      color: var(--color-orange);
+      font-weight: 600;
+    }
+
+    .price-amount {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      color: var(--color-white);
+      line-height: 1;
+    }
+
+    .price-period {
+      font-size: 0.8rem;
+      color: var(--color-muted);
+    }
+
+    /* Feature list inside each card */
+    .feature-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .feature-list li {
+      font-size: 0.85rem;
+      color: var(--color-muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Green checkmark before each feature */
+    .feature-list li::before {
+      content: '✓';
+      color: var(--color-green);
+      font-weight: 700;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+
+    /* Add to cart button — full width inside card */
+    .btn-add-cart {
+      width: 100%;
+      padding: 12px;
+      background: var(--color-green);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background var(--transition), transform var(--transition);
+      margin-top: auto;
+    }
+
+    .btn-add-cart:hover {
+      background: var(--color-green-dark);
+      transform: translateY(-1px);
+    }
+
+    /* Loading and error states */
+    .loading-state, .error-state {
+      text-align: center;
+      padding: 3rem;
+      color: var(--color-muted);
+    }
+
+    .loading-state span {
+      display: inline-block;
+      animation: pulse 1.2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.3; }
+    }
+
+    /* Cart notification toast — slides in from top right */
+    .toast {
+      position: fixed;
+      top: 80px;
+      right: 24px;
+      background: var(--color-green);
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      font-size: 0.9rem;
+      z-index: 999;
+      /* Hidden by default; JS adds .toast-visible to show it */
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      pointer-events: none;
+    }
+
+    .toast.toast-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Cart icon in nav with item count badge */
+    .cart-nav-link {
+      position: relative;
+    }
+
+    .cart-count {
+      position: absolute;
+      top: -8px;
+      right: -10px;
+      background: var(--color-orange);
+      color: var(--color-bg);
+      font-size: 0.65rem;
+      font-weight: 700;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      /* Hidden until cart has items */
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER: consistent navigation across all pages -->
+  <header>
+    <h1>Irish Sponsorship Jobs</h1>
+    <nav>
+      <a href="home.html">Home</a>
+      <a href="jobs.html">Jobs</a>
+      <a href="services.html" class="active">Services</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact Us</a>
+      <!-- Cart link with live item count badge -->
+      <a href="cart.html" class="cart-nav-link">
+        🛒 Cart
+        <span class="cart-count" id="cartCount"></span>
+      </a>
+    </nav>
+  </header>
+
+  <!-- Toast notification: shown briefly when item is added to cart -->
+  <div class="toast" id="toast">✓ Added to cart!</div>
+
+  <main>
+    <h2 class="section-title">Our Services</h2>
+    <p class="section-subtitle">
+      Everything you need to land a sponsored role in Ireland — from CV to visa.
+    </p>
+
+    <!-- Products container: populated by JavaScript fetch below.
+         Shows a loading message while the API request is in flight. -->
+    <div id="productsContainer">
+      <div class="loading-state">
+        <span>Loading services...</span>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <p>© 2026 Irish Sponsorship Jobs — Built for CCT College Dublin</p>
+  </footer>
+
+  <script>
+    /* ============================================================
+       services.js (inline) — Fetches products from the API and
+       renders pricing cards dynamically.
+
+       Flow:
+         1. On page load, generate or retrieve a session_id
+         2. Fetch products from GET /api/products
+         3. Render a pricing card for each product
+         4. Handle "Add to Cart" button clicks via POST /api/cart
+         5. Update the cart count badge in the nav
+       ============================================================ */
+
+
+    /* --- SESSION ID ---
+       Each browser session gets a unique ID stored in localStorage.
+       This ID is sent with every cart request so the server knows
+       which cart belongs to this user.
+
+       Why localStorage instead of cookies?
+       Simpler to implement for a client-side app — no server-side
+       session management needed at this stage. */
+    function getSessionId() {
+      let sessionId = localStorage.getItem('session_id');
+      if (!sessionId) {
+        /* Generate a random ID: timestamp + random string */
+        sessionId = 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('session_id', sessionId);
+      }
+      return sessionId;
+    }
+
+    const SESSION_ID = getSessionId();
+
+
+    /* --- LOAD PRODUCTS ---
+       Fetches all active products from the Express API,
+       which queries MySQL and returns them as JSON. */
+    async function loadProducts() {
+      try {
+        /* fetch() sends an HTTP GET request to our Node.js server.
+           await pauses execution until the response arrives. */
+        const response = await fetch('/api/products');
+
+        if (!response.ok) {
+          throw new Error('Server returned ' + response.status);
+        }
+
+        /* .json() parses the response body as JSON.
+           Returns an array of product objects from MySQL. */
+        const products = await response.json();
+
+        renderProducts(products);
+        updateCartCount();
+
+      } catch (err) {
+        /* Show a user-friendly error if the API is unreachable */
+        document.getElementById('productsContainer').innerHTML = `
+          <div class="error-state">
+            <p>⚠️ Could not load services. Make sure the server is running.</p>
+            <p style="font-size:0.8rem; margin-top:0.5rem;">${err.message}</p>
+          </div>
+        `;
+      }
+    }
+
+
+    /* --- RENDER PRODUCTS ---
+       Receives the products array from the API and builds
+       the HTML for each pricing card. Using innerHTML here
+       because we are building a list of dynamic cards from
+       server data — more practical than creating each element
+       individually with createElement(). */
+    function renderProducts(products) {
+      const container = document.getElementById('productsContainer');
+
+      if (products.length === 0) {
+        container.innerHTML = '<p class="text-muted text-center">No services available at the moment.</p>';
+        return;
+      }
+
+      /* Build the pricing grid HTML */
+      const html = `
+        <div class="pricing-grid">
+          ${products.map(product => `
+            <div class="pricing-card ${product.category === 'bundle' ? 'featured' : ''}">
+
+              ${product.category === 'bundle' ? '<span class="featured-badge">Best Value</span>' : ''}
+
+              <span class="category-pill">${product.category}</span>
+
+              <h3>${product.name}</h3>
+              <p>${product.description}</p>
+
+              <div class="price">
+                <span class="price-currency">€</span>
+                <span class="price-amount">${parseFloat(product.price).toFixed(2)}</span>
+                <span class="price-period">one-time</span>
+              </div>
+
+              <!-- Feature list: rendered from the JSON array stored in MySQL -->
+              <ul class="feature-list">
+                ${product.features.map(f => `<li>${f}</li>`).join('')}
+              </ul>
+
+              <!-- data-id stores the product ID so the click handler
+                   knows which product to add to the cart -->
+              <button
+                class="btn-add-cart"
+                data-id="${product.id}"
+                data-name="${product.name}"
+                onclick="addToCart(${product.id}, '${product.name}')"
+              >
+                Add to Cart
+              </button>
+
+            </div>
+          `).join('')}
+        </div>
+      `;
+
+      container.innerHTML = html;
+    }
+
+
+    /* --- ADD TO CART ---
+       Sends a POST request to /api/cart with the session ID
+       and product ID. The server inserts a row into cart_items
+       in MySQL (or increments quantity if it already exists). */
+    async function addToCart(productId, productName) {
+      try {
+        const response = await fetch('/api/cart', {
+          method: 'POST',
+          /* Content-Type tells the server the body is JSON,
+             so Express can parse it with express.json() middleware */
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            session_id: SESSION_ID,
+            product_id: productId,
+            quantity: 1
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to add to cart');
+        }
+
+        /* Show success toast notification */
+        showToast('✓ ' + productName + ' added to cart!');
+
+        /* Update the cart badge count in the nav */
+        updateCartCount();
+
+      } catch (err) {
+        showToast('⚠️ Could not add to cart. Try again.');
+        console.error('Add to cart error:', err);
+      }
+    }
+
+
+    /* --- UPDATE CART COUNT ---
+       Fetches the current cart and updates the badge number
+       on the cart nav link so the user always sees how many
+       items they have without navigating to the cart page. */
+    async function updateCartCount() {
+      try {
+        const response = await fetch('/api/cart?session_id=' + SESSION_ID);
+        if (!response.ok) return;
+
+        const cart = await response.json();
+        const badge = document.getElementById('cartCount');
+
+        if (cart.item_count > 0) {
+          badge.textContent = cart.item_count;
+          badge.style.display = 'flex';
+        } else {
+          badge.style.display = 'none';
+        }
+      } catch (err) {
+        /* Silently fail — cart count is non-critical UI */
+      }
+    }
+
+
+    /* --- SHOW TOAST ---
+       Displays a brief notification at the top-right of the screen.
+       The toast auto-hides after 2.5 seconds. */
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('toast-visible');
+
+      /* Remove after 2.5s — clearTimeout prevents stacking if
+         the user clicks "Add to Cart" multiple times quickly */
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(() => {
+        toast.classList.remove('toast-visible');
+      }, 2500);
+    }
+
+
+    /* Load products when the page is ready */
+    loadProducts();
+  </script>
+
+</body>
+</html>

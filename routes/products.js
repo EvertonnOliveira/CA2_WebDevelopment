@@ -67,7 +67,7 @@ module.exports = function(db) {
          JSON.parse converts it back to a usable array in JavaScript. */
       const products = results.map(product => ({
         ...product,
-        features: product.features ? JSON.parse(product.features) : []
+        features: typeof product.features === "string" ? JSON.parse(product.features) : (product.features || [])
       }));
 
       /* 200 OK: return the products array as JSON */
