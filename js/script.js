@@ -1,19 +1,5 @@
-/* ============================================================
+/* 
    script.js — Form validation for contact.html
-   
-   FIX 1: The success alert and "return true" were OUTSIDE the
-   validateForm() function in the original code (after the closing
-   brace). This meant they never executed. They are now correctly
-   placed inside the function, after all validation checks pass.
-
-   FIX 2: Errors are now shown inline below each field using
-   dedicated <span class="field-error"> containers in the DOM,
-   rather than a single error paragraph at the bottom of the form.
-   This makes it clear which specific field failed validation.
-
-   FIX 3: The input-error CSS class is added/removed on each
-   field so the border turns red on failure and resets on success.
-   ============================================================ */
 
 
 /* --- HELPER: showError ---
@@ -176,9 +162,9 @@ function validateForm() {
   }
 
 
-  /* ============================================================
+  /* 
      ALL CHECKS PASSED — save and confirm submission
-     ============================================================ */
+    */
 
   /* --- SAVE TO LOCALSTORAGE ---
      We build a submission object and add it to an array stored

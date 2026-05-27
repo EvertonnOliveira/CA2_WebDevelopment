@@ -1,6 +1,6 @@
-/* ============================================================
+/* 
    server.js — Main entry point for the Irish Sponsorship Jobs server
-   ============================================================ */
+    */
 
    require('dotenv').config();
    const express = require('express');
@@ -10,9 +10,9 @@
    
    const app = express();
    
-   /* ============================================================
+   /* 
       MIDDLEWARE
-      ============================================================ */
+       */
    app.use(cors());
    app.use(express.json());
    
@@ -22,9 +22,9 @@
    app.use(express.static(path.join(__dirname)));
    
    
-   /* ============================================================
+   /* 
       DATABASE CONNECTION
-      ============================================================ */
+       */
    const db = mysql.createConnection({
      host:       process.env.DB_HOST,
      user:       process.env.DB_USER,
@@ -35,7 +35,7 @@
    
    db.connect((err) => {
      if (err) {
-       console.error('❌ MySQL connection failed:', err.message);
+       console.error(' MySQL connection failed:', err.message);
        console.log('💡 Make sure MySQL is running and your .env credentials are correct.');
        console.log('💡 Run the database.sql script first to create the database and tables.');
        return;
@@ -46,9 +46,9 @@
    module.exports.db = db;
    
    
-   /* ============================================================
+   /* 
       ROUTES
-      ============================================================ */
+       */
    const productsRouter = require('./routes/products')(db);
    app.use('/api/products', productsRouter);
    
@@ -56,7 +56,7 @@
    app.use('/api/cart', cartRouter);
    
    
-   /* ============================================================
+   /* 
       CATCH-ALL ROUTE
       Changed from 'public/home.html' to 'home.html' because the
       HTML files are in the project root, not in a /public subfolder.
@@ -66,9 +66,9 @@
    });
    
    
-   /* ============================================================
-      START SERVER
-      ============================================================ */
+/*
+   START SERVER
+*/
    const PORT = process.env.PORT || 3000;
    
    app.listen(PORT, () => {
