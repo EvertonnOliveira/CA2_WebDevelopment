@@ -1,11 +1,11 @@
--- ============================================================
+-- 
 -- database.sql — Irish Sponsorship Jobs
 -- This script creates the database, tables, and inserts
 -- the sample products needed to run the project.
 --
 -- How to run:
 --   mysql -u root -p < db/database.sql
--- ============================================================
+--
 
 
 -- Create the database if it doesn't exist yet
@@ -15,12 +15,12 @@ CREATE DATABASE IF NOT EXISTS `irish_sponsorship_db`;
 USE `irish_sponsorship_db`;
 
 
--- ============================================================
+--
 -- TABLE: products
 -- Stores all subscription services available on the website.
 -- Products are fetched by the Node.js server and displayed
 -- dynamically on the services.html page.
--- ============================================================
+--
 
 -- Remove the table first if it already exists (clean start)
 DROP TABLE IF EXISTS `cart_items`;
@@ -56,13 +56,13 @@ CREATE TABLE `products` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
--- ============================================================
+
 -- TABLE: cart_items
 -- Stores the shopping cart for each browser session.
--- Each row links a session (user) to a product they added.
+-- Each row links a session user to a product they added.
 -- The session_id is generated in the browser and stored
--- in localStorage — no login required.
--- ============================================================
+-- in localStorage no login required..
+
 
 CREATE TABLE `cart_items` (
   -- Auto-incrementing ID for each cart row
@@ -98,13 +98,13 @@ CREATE TABLE `cart_items` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
--- ============================================================
+--
 -- SEED DATA: products
 -- Inserts the 5 subscription services into the products table.
 -- This data is what appears on the services.html page.
--- ============================================================
+--
 
-INSERT INTO `products` (`name`, `description`, `price`, `category`, `features`) VALUES
+INSERT INTO "products" ("name", "description", "price", "category", "features") VALUES
 (
   'CV Review',
   'Professional review of your CV tailored for the Irish job market.',

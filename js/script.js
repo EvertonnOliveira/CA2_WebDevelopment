@@ -35,20 +35,19 @@ function showError(fieldId, message) {
   }
 }
 
-
 /* --- MAIN FUNCTION: validateForm ---
    Called by the form's onsubmit handler: onsubmit="return validateForm()"
    
    Returns:
-     false — if any field is invalid (prevents form submission,
-              keeps the user on the page to fix errors)
-     false — even on success (we handle submission via localStorage
+     false  if any field is invalid (prevents form submission,
+               keeps the user on the page to fix errors)
+     false  even on success (we handle submission via localStorage
               ourselves and don't want a page reload)
 
    Why return false on success too?
    Because we are storing data in localStorage and showing a success
-   message ourselves. Returning true would trigger a real HTTP form
-   submit, which reloads or navigates away from the page. */
+   message ourselves.
+    */
 function validateForm() {
 
   /* --- STEP 1: Read field values ---
