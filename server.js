@@ -60,7 +60,7 @@
       CATCH-ALL ROUTE
       Changed from 'public/home.html' to 'home.html' because the
       HTML files are in the project root, not in a /public subfolder.
-      ============================================================ */
+      */
    app.get('*', (req, res) => {
      res.sendFile(path.join(__dirname, 'home.html'));
    });
